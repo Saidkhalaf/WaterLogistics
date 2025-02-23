@@ -1,0 +1,78 @@
+### GET access token with normal user credentials
+
+POST http://localhost:8180/realms/water/protocol/openid-connect/token HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+
+
+client_id=waterproject&client_secret=xayjgdlCfhVvskJffQheX8fSjqXS1qPB&username=said&password=said&grant_type=password&scope=openid
+
+//saving the access token
+> {% client.global.set("access_token", response.body.access_token) %}
+
+### Access ships endpoint
+GET http://localhost:8082/api/ships HTTP/1.1
+Content_type: application/json
+Authorization: Bearer {{access_token}}
+
+### Access ship by id
+GET http://localhost:8082/api/ships/7e1f5b94-4716-47dd-8197-8c11c6c24386 HTTP/1.1
+Content_type: application/json
+Authorization: Bearer {{access_token}}
+
+### Create a ship
+POST http://localhost:8082/api/ships
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "vesselNumber": "Vessel457",
+  "captainId": "0f99df9c-7774-42da-ab71-d6dee719c15c"
+}
+
+### Process purchase order US.19
+POST http://localhost:8082/api/purchase-orders/process
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "orderNumber": "PO123",
+  "shipId": "7e1f5b94-4716-47dd-8197-8c11c6c24386"
+}
+
+### Open inspection operations US.20
+GET http://localhost:8082/api/inspection-operations/open HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+### Done Ispection operations US.20
+GET http://localhost:8082/api/inspection-operations/done HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+### US.21 for bunker operations plan maximum 6 times per day
+POST http://localhost:8082/api/bunker-operations/plan
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "vesselNumber": "Vessel123",
+  "ship": {
+    "id": "7e1f5b94-4716-47dd-8197-8c11c6c24386"
+  },
+  "operationDate": "2023-10-10"
+}
+
+### US.22 all ship operations overview
+GET http://localhost:8082/api/ship-operations/7e1f5b94-4716-47dd-8197-8c11c6c24386/operations-overview HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+### US.22 Check all ship operations overview by entering vessel number
+POST http://localhost:8082/api/ship-operations/operations-overview/Vessel123 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+### US.22 Check all ship operations overview by entering vessel number
+POST http://localhost:8082/api/ship-operations/operations-overview/Vessel444 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{access_token}}

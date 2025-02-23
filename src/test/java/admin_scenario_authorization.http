@@ -1,0 +1,20 @@
+### Copy this url in your browser
+http://localhost:8180/realms/water/protocol/openid-connect/auth?response_type=code&client_id=waterproject&client_secret=xayjgdlCfhVvskJffQheX8fSjqXS1qPB&redirect_uri=http://localhost:3333/callback&scope=openid&state=123456789
+
+//http://localhost:3333/callback?state=123456789&session_state=9799cecb-ce5a-49f1-b46a-fa7b737353a0&iss=http%3A%2F%2Flocalhost%3A8180%2Frealms%2Fwater&code=ad8a01cf-69de-42ce-b838-193996a7d123.9799cecb-ce5a-49f1-b46a-fa7b737353a0.cdb970cd-a03e-4ae3-ad97-7d533621b5d7
+//De code is de code die je krijgt van de callback url en dit is eenmalig
+
+### GET access token with admin user
+POST http://localhost:8180/realms/water/protocol/openid-connect/token HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+
+client_id=waterproject&client_secret=xayjgdlCfhVvskJffQheX8fSjqXS1qPB&grant_type=authorization_code&scope=openid&redirect_uri=http://localhost:3333/callback&code=ad8a01cf-69de-42ce-b838-193996a7d123.9799cecb-ce5a-49f1-b46a-fa7b737353a0.cdb970cd-a03e-4ae3-ad97-7d533621b5d7
+
+//saving the access token
+> {% client.global.set("access_token", response.body.access_token) %}
+
+
+### Acess secured endpoint with admin role
+GET http://localhost:8082/secured/admin HTTP/1.1
+Content_type: application/json
+Authorization: Bearer {{access_token}})}}
